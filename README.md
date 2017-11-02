@@ -1,8 +1,6 @@
 # Ruson
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/ruson`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Json ORM for Ruby Object
 
 ## Installation
 
@@ -22,7 +20,131 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+post.json
+```json
+{
+  "title": "Ruson",
+  "content": "Welcome!"
+}
+```
+
+```ruby
+require 'ruson'
+
+class Post < Ruson::Base
+    def fields
+      field :title
+      field :content
+    end
+end
+
+json = File.read('post.json')
+post = Post.new(json)
+post.title #=> 'Ruson'
+post.content #=> 'Welcome!'
+```
+
+### name
+
+post.json
+```json
+{
+  "title": "Ruson",
+  "post_url": "http://sample.com"
+}
+```
+
+```ruby
+require 'ruson'
+
+class Post < Ruson::Base
+  def fields
+    field :title
+    field :url, name: 'post_url'
+  end
+end
+
+json = File.read('post.json')
+post = Post.new(json)
+post.url #=> 'http://sample.com'
+```
+
+### nested class
+
+#### class
+
+post.json
+```json
+{
+  "title": "Ruson",
+  "post_url": "http://sample.com",
+  "picture": {
+    "title": "nice picture",
+    "url": "http://sample.com/picture.png"
+  }
+}
+```
+
+```ruby
+require 'ruson'
+
+class Post < Ruson::Base
+  def fields
+    field :title
+    field :picture, class: Picture
+  end
+end
+
+class Picture < Ruson::Base
+  def fields
+    field :title
+    field :url
+  end
+end
+
+json = File.read('post.json')
+post = Post.new(json)
+post.picture.url #=> 'http://sample.com/picture.png'
+```
+
+#### each class
+
+post.json
+```json
+{
+  "title": "Ruson",
+  "tags": [
+    {
+      "name": "Ruby"
+    },
+    {
+      "name": "Json"
+    }
+   ]
+}
+```
+
+```ruby
+require 'ruson'
+
+class Post < Ruson::Base
+  def fields
+    field :title
+    field :tags, each_class: Tag
+  end
+end
+
+class Tag < Ruson::Base
+  def fields
+    field :name
+  end
+end
+
+json = File.read('post.json')
+post = Post.new(json)
+post.tags.first.name #=> 'Ruby'
+```
+
 
 ## Development
 
