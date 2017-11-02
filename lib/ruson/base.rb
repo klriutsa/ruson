@@ -3,7 +3,7 @@ require 'json'
 module Ruson
   class Base
     def initialize(json, options={})
-      params = JSON.parse(json)
+      params = convert(json)
       params = params[options[:root].to_s] unless options[:root].nil?
       @params = params
       fields
@@ -48,6 +48,11 @@ module Ruson
         result << class_param(param, klass)
         result
       end
+    end
+
+    def convert(json)
+      return JSON.parse(json) unless json.class == Hash
+      json
     end
   end
 end
