@@ -32,10 +32,10 @@ post.json
 require 'ruson'
 
 class Post < Ruson::Base
-    def fields
-      field :title
-      field :content
-    end
+  def fields
+    field :title
+    field :content
+  end
 end
 
 json = File.read('post.json')
