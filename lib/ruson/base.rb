@@ -51,8 +51,8 @@ module Ruson
     end
 
     def convert(json)
-      return JSON.parse(json) unless json.class == Hash
-      json
+      return json if json.class == Hash
+      JSON.parse(json)
     end
   end
 end
