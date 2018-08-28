@@ -1,24 +1,34 @@
 require 'json'
+require 'active_support'
+require 'active_support/core_ext'
 
 module Ruson
   class Base
-    def initialize(json, options={})
-      params = convert(json)
-      params = params[options[:root].to_s] unless options[:root].nil?
+    class << self
+      def field(attr, options = {})
+        add_accessor attr.to_s, options
+      end
+
+      def add_accessor(name, options)
+        instance_eval("attr_accessor :#{name}")
+        @accessors ||= {}
+        @accessors.merge!({ name.to_sym => options })
+      end
+
+      def accessors
+        @accessors
+      end
+    end
+
+    def initialize(json, options = {})
+      params  = convert(json)
+      params  = params[options[:root].to_s] unless options[:root].nil?
       @params = params
-      fields
-    end
 
-    def fields
-
-    end
-
-    def field(attr, options={})
-      attr_name = attr.to_s
-      key_name = options[:name] || attr_name
-      self.class.class_eval("attr_accessor :#{attr_name}")
-      val = get_val(key_name, options)
-      set_attribute(attr_name, val)
+      self.class.accessors.each do |key, options|
+        val = get_val(options[:name] || key, options)
+        set_attribute(key, val)
+      end
     end
 
     private
@@ -51,8 +61,7 @@ module Ruson
     end
 
     def convert(json)
-      return json if json.class == Hash
-      JSON.parse(json)
+      (json.class == Hash ? json : JSON.parse(json)).with_indifferent_access
     end
   end
 end

@@ -31,11 +31,9 @@ post.json
 ```ruby
 require 'ruson'
 
-class Post < Ruson::Base
-  def fields
-    field :title
-    field :content
-  end
+class Post < Ruson::Base  
+  field :title
+  field :content
 end
 
 json = File.read('post.json')
@@ -58,10 +56,8 @@ post.json
 require 'ruson'
 
 class Post < Ruson::Base
-  def fields
-    field :title
-    field :url, name: 'post_url'
-  end
+  field :title
+  field :url, name: 'post_url'
 end
 
 json = File.read('post.json')
@@ -89,17 +85,13 @@ post.json
 require 'ruson'
 
 class Post < Ruson::Base
-  def fields
-    field :title
-    field :picture, class: Picture
-  end
+  field :title
+  field :picture, class: Picture
 end
 
 class Picture < Ruson::Base
-  def fields
-    field :title
-    field :url
-  end
+  field :title
+  field :url
 end
 
 json = File.read('post.json')
@@ -128,16 +120,12 @@ post.json
 require 'ruson'
 
 class Post < Ruson::Base
-  def fields
-    field :title
-    field :tags, each_class: Tag
-  end
+  field :title
+  field :tags, each_class: Tag
 end
 
 class Tag < Ruson::Base
-  def fields
-    field :name
-  end
+  field :name
 end
 
 json = File.read('post.json')
