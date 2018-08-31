@@ -14,7 +14,7 @@ RSpec.describe Ruson::Base do
     field :objects, each_class: RusonBaseTestSubClass2
   end
 
-  let(:text){ '{"object": { "test_name": "object_name" }, "objects": [ { "source_key_name": "1" }, { "source_key_name": "2" }, { "source_key_name": "3" } ] }' }
+  let(:text) { '{"object": { "test_name": "object_name" }, "objects": [ { "source_key_name": "1" }, { "source_key_name": "2" }, { "source_key_name": "3" } ] }' }
 
   it do
     obj = RusonBaseTestSubClass.new({})
@@ -28,6 +28,11 @@ RSpec.describe Ruson::Base do
   end
 
   it do
+    obj = RusonBaseTestSubClass.new({ root: { test_name: 'test' } }, root_key: :root)
+    expect(obj.test_name).to eq 'test'
+  end
+
+  it do
     obj           = RusonBaseTestSubClass.new({ test_name: 'test' })
     obj.test_name = 'testtest'
     expect(obj.test_name).to eq 'testtest'
@@ -35,6 +40,11 @@ RSpec.describe Ruson::Base do
 
   it do
     obj = RusonBaseTestSubClass.new({ test_name: 'test' }.to_json)
+    expect(obj.test_name).to eq 'test'
+  end
+
+  it do
+    obj = RusonBaseTestSubClass.new({ root: { test_name: 'test' } }.to_json, root_key: :root)
     expect(obj.test_name).to eq 'test'
   end
 
