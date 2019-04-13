@@ -21,8 +21,8 @@ module Ruson
     end
 
     def initialize(json, root_key: nil)
-      params  = convert(json)
-      params  = params[root_key.to_s] unless root_key.nil?
+      params = convert(json)
+      params = params[root_key.to_s] unless root_key.nil?
       @params = params
 
       self.class.accessors.each do |key, options|
