@@ -111,11 +111,7 @@ module Ruson
 
     def convert_array_to_hash_value(value)
       if value.instance_of?(Array)
-        array = []
-        value.each do |v|
-          array << convert_ruson_to_hash_value(v)
-        end
-        array
+        value.inject([]) { |result, v| result << convert_ruson_to_hash_value(v) }
       else
         convert_ruson_to_hash_value(value)
       end
