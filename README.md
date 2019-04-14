@@ -174,7 +174,7 @@ post = Post.new(json)
 post.url = 'https://example.com/examples'
 
 post.to_json #=> "{\"title\":\"Ruson\",\"url\":\"https://example.com/examples\"}"
-````
+```
 
 ### to_hash
 
@@ -189,7 +189,25 @@ post = Post.new(json)
 post.url = 'https://example.com/examples'
 
 post.to_hash #=> {title: "Ruson", url: "https://example.com/examples" }
-````
+```
+
+### API json parser
+
+```ruby
+class Article < Ruson::Base
+  field :title
+  field :description
+end
+
+conn = Faraday::Connection.new(url: 'https://your.api/articles/1') do |faraday|
+  faraday.request :url_encoded
+  faraday.adapter Faraday.default_adapter
+end
+
+response = conn.get
+article = Article.new(response.body)
+article.title
+```
 
 ## Development
 
