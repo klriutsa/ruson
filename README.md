@@ -161,6 +161,35 @@ article.status = 'undefined'
   #=> undefined is not a valid status (ArgumentError)
 ```
 
+### to_json
+
+```ruby
+class Post < Ruson::Base
+  field :title
+  field :url
+end
+
+json = File.read('post.json')
+post = Post.new(json)
+post.url = 'https://example.com/examples'
+
+post.to_json #=> "{\"title\":\"Ruson\",\"url\":\"https://example.com/examples\"}"
+````
+
+### to_hash
+
+```ruby
+class Post < Ruson::Base
+  field :title
+  field :url
+end
+
+json = File.read('post.json')
+post = Post.new(json)
+post.url = 'https://example.com/examples'
+
+post.to_hash #=> {title: "Ruson", url: "https://example.com/examples" }
+````
 
 ## Development
 
