@@ -133,6 +133,34 @@ post = Post.new(json)
 post.tags.first.name #=> 'Ruby'
 ```
 
+### enum
+
+article.json
+```json
+{  
+   "title":"Title",
+   "status":"draft"
+}
+```
+
+```ruby
+class Article < Ruson::Base
+  field :title
+  enum status: { :draft, :published }
+end
+
+article = Article.new('article.json')
+
+article.status #=> :draft
+article.draft? #=> true
+
+article.status = 'published'
+article.status #=> :published
+
+article.status = 'undefined'
+  #=> undefined is not a valid status (ArgumentError)
+```
+
 
 ## Development
 

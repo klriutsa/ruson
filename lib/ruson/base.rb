@@ -6,17 +6,39 @@ module Ruson
   class Base
     class << self
       def field(attr, options = {})
+        instance_eval("attr_accessor :#{attr.to_s}")
         add_accessor attr.to_s, options
       end
 
-      def add_accessor(name, options)
-        instance_eval("attr_accessor :#{name}")
-        @accessors ||= {}
-        @accessors.merge!({ name.to_sym => options })
+      def enum(attr, values)
+        define_enum_methods attr.to_s, values.map(&:to_sym)
+        add_accessor attr.to_s
       end
 
       def accessors
         @accessors
+      end
+
+      private
+
+      def define_enum_methods(name, values)
+        instance_eval("attr_reader :#{name}")
+
+        define_method "#{name}=" do |v|
+          raise ArgumentError, "#{v} is not a valid #{name}" unless values.include? v.to_sym
+          eval "@#{name} = :#{v.to_s}"
+        end
+
+        values.each do |v|
+          define_method "#{v}?" do
+            eval "@#{name} == :#{v.to_s}"
+          end
+        end
+      end
+
+      def add_accessor(name, options = {})
+        @accessors ||= {}
+        @accessors.merge!({ name.to_sym => options })
       end
     end
 

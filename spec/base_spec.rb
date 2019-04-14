@@ -14,6 +14,10 @@ RSpec.describe Ruson::Base do
     field :objects, each_class: RusonBaseTestSubClass2
   end
 
+  class RusonBaseTestSubClass4 < Ruson::Base
+    enum :status, %i[draft published]
+  end
+
   let(:text) { '{"object": { "test_name": "object_name" }, "objects": [ { "source_key_name": "1" }, { "source_key_name": "2" }, { "source_key_name": "3" } ] }' }
 
   it do
@@ -74,5 +78,39 @@ RSpec.describe Ruson::Base do
     expect(obj.objects[0].test_name).to eq '1'
     expect(obj.objects[1].test_name).to eq '2'
     expect(obj.objects[2].test_name).to eq '3'
+  end
+
+  it do
+    obj = RusonBaseTestSubClass4.new({ status: :draft })
+    expect(obj.status).to eq :draft
+  end
+
+  it do
+    expect do
+      RusonBaseTestSubClass4.new({ status: :undefined })
+    end.to raise_error { ArgumentError }
+  end
+
+  it do
+    obj = RusonBaseTestSubClass4.new({ status: :draft })
+    expect(obj.draft?).to be_truthy
+    expect(obj.published?).to be_falsey
+  end
+
+  it do
+    obj = RusonBaseTestSubClass4.new({ status: :draft }.to_json)
+    expect(obj.status).to eq :draft
+  end
+
+  it do
+    expect do
+      RusonBaseTestSubClass4.new({ status: :undefined }.to_json)
+    end.to raise_error { ArgumentError }
+  end
+
+  it do
+    obj = RusonBaseTestSubClass4.new({ status: :draft }.to_json)
+    expect(obj.draft?).to be_truthy
+    expect(obj.published?).to be_falsey
   end
 end
