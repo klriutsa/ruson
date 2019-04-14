@@ -53,6 +53,32 @@ module Ruson
       end
     end
 
+    def to_hash
+      hash = Hash.new
+      self.class.accessors.each do |accessor, options|
+        value = send(accessor)
+        if value.instance_of?(Array)
+          array = []
+          value.each do |v|
+            if ruson_class?(v)
+              array << v.to_hash
+            else
+              array << v
+            end
+          end
+          hash[accessor.to_sym] = array
+        else
+          value = value.to_hash if ruson_class?(value)
+          hash[accessor.to_sym] = value
+        end
+      end
+      hash
+    end
+
+    def to_json
+      to_hash.to_json
+    end
+
     private
 
     def set_attribute(attr_name, val)
@@ -85,6 +111,10 @@ module Ruson
     def convert(json)
       return json if json.class == ActiveSupport::HashWithIndifferentAccess
       (json.class == Hash ? json : JSON.parse(json)).with_indifferent_access
+    end
+
+    def ruson_class?(value)
+      value.class < Ruson::Base
     end
   end
 end
