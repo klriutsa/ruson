@@ -57,20 +57,7 @@ module Ruson
       hash = Hash.new
       self.class.accessors.each do |accessor, options|
         value = send(accessor)
-        if value.instance_of?(Array)
-          array = []
-          value.each do |v|
-            if ruson_class?(v)
-              array << v.to_hash
-            else
-              array << v
-            end
-          end
-          hash[accessor.to_sym] = array
-        else
-          value = value.to_hash if ruson_class?(value)
-          hash[accessor.to_sym] = value
-        end
+        hash[accessor.to_sym] = convert_array_to_hash_value(value)
       end
       hash
     end
@@ -115,6 +102,23 @@ module Ruson
 
     def ruson_class?(value)
       value.class < Ruson::Base
+    end
+
+    def convert_ruson_to_hash_value(value)
+      return value.to_hash if ruson_class?(value)
+      value
+    end
+
+    def convert_array_to_hash_value(value)
+      if value.instance_of?(Array)
+        array = []
+        value.each do |v|
+          array << convert_ruson_to_hash_value(v)
+        end
+        array
+      else
+        convert_ruson_to_hash_value(value)
+      end
     end
   end
 end
