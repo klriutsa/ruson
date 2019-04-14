@@ -54,12 +54,11 @@ module Ruson
     end
 
     def to_hash
-      hash = Hash.new
-      self.class.accessors.each do |accessor, options|
-        value = send(accessor)
-        hash[accessor.to_sym] = convert_array_to_hash_value(value)
+      self.class.accessors.keys.inject({}) do |result, key|
+        value = send(key)
+        result[key.to_sym] = convert_array_to_hash_value(value)
+        result
       end
-      hash
     end
 
     def to_json
@@ -111,11 +110,7 @@ module Ruson
 
     def convert_array_to_hash_value(value)
       if value.instance_of?(Array)
-        array = []
-        value.each do |v|
-          array << convert_ruson_to_hash_value(v)
-        end
-        array
+        value.inject([]) { |result, v| result << convert_ruson_to_hash_value(v) }
       else
         convert_ruson_to_hash_value(value)
       end
