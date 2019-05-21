@@ -4,6 +4,7 @@ require 'active_support/core_ext'
 
 require 'ruson/class/boolean'
 require 'ruson/class/integer'
+require 'ruson/class/float'
 
 require 'ruson/converter'
 require 'ruson/json'
