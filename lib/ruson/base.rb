@@ -45,10 +45,9 @@ module Ruson
     def initialize(json, root_key: nil)
       params = convert(json)
       params = params[root_key.to_s] unless root_key.nil?
-      @params = params
 
       self.class.accessors.each do |key, options|
-        val = get_val(options[:name] || key, options)
+        val = get_val(params, options[:name] || key, options)
         set_attribute(key, val)
       end
     end
@@ -71,13 +70,13 @@ module Ruson
       self.send("#{attr_name}=".to_sym, val)
     end
 
-    def get_val(key_name, options)
+    def get_val(params, key_name, options)
       if !options[:class].nil?
-        class_param(@params[key_name], options[:class])
+        class_param(params[key_name], options[:class])
       elsif !options[:each_class].nil?
-        each_class_param(@params[key_name], options[:each_class])
+        each_class_param(params[key_name], options[:each_class])
       else
-        @params[key_name]
+        params[key_name]
       end
     end
 
