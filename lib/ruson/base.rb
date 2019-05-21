@@ -2,6 +2,10 @@ require 'json'
 require 'active_support'
 require 'active_support/core_ext'
 
+require 'ruson/converter'
+require 'ruson/json'
+require 'ruson/value'
+
 module Ruson
   class Base
     class << self
@@ -42,8 +46,12 @@ module Ruson
       end
     end
 
+    include Ruson::Converter
+    include Ruson::Json
+    include Ruson::Value
+
     def initialize(json, root_key: nil)
-      params = convert(json)
+      params = get_hash_from_json(json)
       params = params[root_key.to_s] unless root_key.nil?
 
       self.class.accessors.each do |key, options|
@@ -53,11 +61,7 @@ module Ruson
     end
 
     def to_hash
-      self.class.accessors.keys.inject({}) do |result, key|
-        value = send(key)
-        result[key.to_sym] = convert_array_to_hash_value(value)
-        result
-      end
+      convert_to_hash(self.class.accessors)
     end
 
     def to_json
@@ -68,51 +72,6 @@ module Ruson
 
     def set_attribute(attr_name, val)
       self.send("#{attr_name}=".to_sym, val)
-    end
-
-    def get_val(params, key_name, options)
-      if !options[:class].nil?
-        class_param(params[key_name], options[:class])
-      elsif !options[:each_class].nil?
-        each_class_param(params[key_name], options[:each_class])
-      else
-        params[key_name]
-      end
-    end
-
-    def class_param(param, klass)
-      return nil if param.nil?
-      klass.new(param)
-    end
-
-    def each_class_param(params, klass)
-      return nil if params.nil?
-      params.inject([]) do |result, param|
-        result << class_param(param, klass)
-        result
-      end
-    end
-
-    def convert(json)
-      return json if json.class == ActiveSupport::HashWithIndifferentAccess
-      (json.class == Hash ? json : JSON.parse(json)).with_indifferent_access
-    end
-
-    def ruson_class?(value)
-      value.class < Ruson::Base
-    end
-
-    def convert_ruson_to_hash_value(value)
-      return value.to_hash if ruson_class?(value)
-      value
-    end
-
-    def convert_array_to_hash_value(value)
-      if value.instance_of?(Array)
-        value.inject([]) { |result, v| result << convert_ruson_to_hash_value(v) }
-      else
-        convert_ruson_to_hash_value(value)
-      end
     end
   end
 end
