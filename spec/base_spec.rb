@@ -18,7 +18,7 @@ RSpec.describe Ruson::Base do
     enum :status, %i[draft published]
   end
 
-  let(:text) { '{"object": { "test_name": "object_name" }, "objects": [ { "source_key_name": "1" }, { "source_key_name": "2" }, { "source_key_name": "3" } ] }' }
+  let(:text) { File.read('spec/support/example.json') }
 
   it do
     obj = RusonBaseTestSubClass.new({})
