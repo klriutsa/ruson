@@ -2,7 +2,9 @@ require 'json'
 require 'active_support'
 require 'active_support/core_ext'
 
-require 'ruson/boolean'
+require 'ruson/class/boolean'
+require 'ruson/class/integer'
+
 require 'ruson/converter'
 require 'ruson/json'
 require 'ruson/value'
