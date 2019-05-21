@@ -58,10 +58,7 @@ module Ruson
       params = get_hash_from_json(json)
       params = params[root_key.to_s] unless root_key.nil?
 
-      self.class.accessors.each do |key, options|
-        val = get_val(params, options[:name] || key, options)
-        set_attribute(key, val)
-      end
+      init_attributes(self.class.accessors, params)
     end
 
     def to_hash
@@ -73,6 +70,13 @@ module Ruson
     end
 
     private
+
+    def init_attributes(accessors, params)
+      accessors.each do |key, options|
+        val = get_val(params, options[:name] || key, options)
+        set_attribute(key, val)
+      end
+    end
 
     def set_attribute(attr_name, val)
       self.send("#{attr_name}=".to_sym, val)
