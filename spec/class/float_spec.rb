@@ -5,7 +5,7 @@ RSpec.describe Float do
     field :rate, class: Float
   end
 
-  it 'convert to boolean' do
+  it 'cast to float' do
     obj = FloatObject.new({ rate: '12.04' })
     expect(obj.rate).to eq 12.04
 

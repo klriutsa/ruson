@@ -1,23 +1,6 @@
 require 'spec_helper'
 
 RSpec.describe Ruson::Base do
-  class RusonBaseTestSubClass < Ruson::Base
-    field :test_name
-  end
-
-  class RusonBaseTestSubClass2 < Ruson::Base
-    field :test_name, name: 'source_key_name'
-  end
-
-  class RusonBaseTestSubClass3 < Ruson::Base
-    field :object, class: RusonBaseTestSubClass
-    field :objects, each_class: RusonBaseTestSubClass2
-  end
-
-  class RusonBaseTestSubClass4 < Ruson::Base
-    enum :status, %i[draft published]
-  end
-
   let(:text) { File.read('spec/support/example.json') }
 
   it do
@@ -112,29 +95,5 @@ RSpec.describe Ruson::Base do
     obj = RusonBaseTestSubClass4.new({ status: :draft }.to_json)
     expect(obj.draft?).to be_truthy
     expect(obj.published?).to be_falsey
-  end
-
-  it 'convert object to hash' do
-    obj = RusonBaseTestSubClass.new({ test_name: 'test' })
-    obj.test_name = 'new_name'
-    expect(obj.to_hash).to eq({ test_name: 'new_name' })
-  end
-
-  it 'convert nested object to hash' do
-    obj = RusonBaseTestSubClass3.new(text)
-    obj.objects.first.test_name = '100'
-    expect(obj.to_hash).to eq({ object: { test_name: 'object_name' }, objects: [{ test_name: '100' }, { test_name: '2' }, { test_name: '3' }] })
-  end
-
-  it 'convert object to json' do
-    obj = RusonBaseTestSubClass.new({ test_name: 'test' })
-    obj.test_name = 'new_name'
-    expect(obj.to_json).to eq '{"test_name":"new_name"}'
-  end
-
-  it 'convert nested object to json' do
-    obj = RusonBaseTestSubClass3.new(text)
-    obj.objects.first.test_name = '100'
-    expect(obj.to_json).to eq '{"object":{"test_name":"object_name"},"objects":[{"test_name":"100"},{"test_name":"2"},{"test_name":"3"}]}'
   end
 end

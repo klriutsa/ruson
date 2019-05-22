@@ -5,7 +5,7 @@ RSpec.describe Boolean do
     field :enabled, class: Boolean
   end
 
-  it 'convert to boolean' do
+  it 'cast to boolean' do
     obj = BooleanObject.new({ enabled: true })
     expect(obj.enabled).to be_truthy
 

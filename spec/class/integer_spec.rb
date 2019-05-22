@@ -5,7 +5,7 @@ RSpec.describe Integer do
     field :count, class: Integer
   end
 
-  it 'convert to boolean' do
+  it 'cast to integer' do
     obj = IntegerObject.new({ count: '1204' })
     expect(obj.count).to eq 1204
 
