@@ -99,6 +99,38 @@ post = Post.new(json)
 post.picture.url #=> 'http://sample.com/picture.png'
 ```
 
+##### Primary classes
+
+* Boolean
+* Integer
+* Float
+
+
+post.json
+```json
+{
+  "title": "Ruson",
+  "is_new": "true",
+  "view": "1234",
+  "rate": "3.8"
+}
+```
+
+```ruby
+class Post < Ruson::Base
+  field :title
+  field :is_new, class: Boolean
+  field :view, class: Integer
+  field :rate, class: Float
+end
+
+json = File.read('post.json')
+post = Post.new(json)
+post.is_new #=> true
+post.view #=> 1234
+post.rate #=> 3.8
+```
+
 #### each class
 
 post.json
