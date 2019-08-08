@@ -1,16 +1,26 @@
-class RusonBaseTestSubClass < Ruson::Base
-  field :test_name
+class User < Ruson::Base
+  field :id
+  field :name
+  field :url
 end
 
-class RusonBaseTestSubClass2 < Ruson::Base
-  field :test_name, name: 'source_key_name'
+class Picture < Ruson::Base
+  field :id
+  field :title
+  field :url
 end
 
-class RusonBaseTestSubClass3 < Ruson::Base
-  field :object, class: RusonBaseTestSubClass
-  field :objects, each_class: RusonBaseTestSubClass2
+class Tag < Ruson::Base
+  field :id
+  field :name
 end
 
-class RusonBaseTestSubClass4 < Ruson::Base
+class Post < Ruson::Base
+  field :id
+  field :title
+  field :user, class: User
+  field :content
+  field :picture, class: Picture
+  field :tags, each_class: Tag
   enum :status, %i[draft published]
 end
