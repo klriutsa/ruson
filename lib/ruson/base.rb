@@ -10,6 +10,8 @@ require 'ruson/converter'
 require 'ruson/json'
 require 'ruson/value'
 
+require 'ruson/error'
+
 module Ruson
   class Base
     class << self

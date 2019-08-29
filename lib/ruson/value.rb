@@ -1,6 +1,7 @@
 module Ruson
   module Value
     def get_val(params, key_name, options)
+      check_nilable(params[key_name], options[:nilable])
       if !options[:class].nil?
         class_param(params[key_name], options[:class])
       elsif !options[:each_class].nil?
@@ -22,6 +23,12 @@ module Ruson
       params.inject([]) do |result, param|
         result << class_param(param, klass)
         result
+      end
+    end
+
+    def check_nilable(value, nilable)
+      if nilable
+        raise Ruson::NotNilException if value.nil?
       end
     end
   end
