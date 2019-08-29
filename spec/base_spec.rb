@@ -1,98 +1,87 @@
 require 'spec_helper'
 
 RSpec.describe Ruson::Base do
-  let(:text) { File.read('spec/support/example.json') }
+  let(:post_json) { File.read('spec/support/post.json') }
 
   it do
-    obj = RusonBaseTestSubClass.new({})
-    expect(obj).to respond_to :test_name
-    expect(obj).to respond_to :test_name=
+    obj = User.new({})
+    expect(obj).to respond_to :name
+    expect(obj).to respond_to :name=
   end
 
   it do
-    obj = RusonBaseTestSubClass.new({ test_name: 'test' })
-    expect(obj.test_name).to eq 'test'
+    obj = Post.new(post_json)
+    expect(obj.title).to eq 'Ruson'
   end
 
   it do
-    obj = RusonBaseTestSubClass.new({ root: { test_name: 'test' } }, root_key: :root)
-    expect(obj.test_name).to eq 'test'
+    obj = User.new({ root: { name: 'name' } }, root_key: :root)
+    expect(obj.name).to eq 'name'
   end
 
   it do
-    obj = RusonBaseTestSubClass.new({ test_name: 'test' })
-    obj.test_name = 'testtest'
-    expect(obj.test_name).to eq 'testtest'
+    obj = User.new({ name: 'name' })
+    obj.name = 'ruby'
+    expect(obj.name).to eq 'ruby'
   end
 
   it do
-    obj = RusonBaseTestSubClass.new({ test_name: 'test' }.to_json)
-    expect(obj.test_name).to eq 'test'
+    obj = User.new({ name: 'name' }.to_json)
+    expect(obj.name).to eq 'name'
   end
 
   it do
-    obj = RusonBaseTestSubClass.new({ root: { test_name: 'test' } }.to_json, root_key: :root)
-    expect(obj.test_name).to eq 'test'
+    obj = User.new({ root: { name: 'name' } }.to_json, root_key: :root)
+    expect(obj.name).to eq 'name'
   end
 
   it do
-    obj = RusonBaseTestSubClass.new({ test_name: 'test' }.to_json)
-    obj.test_name = 'testtest'
-    expect(obj.test_name).to eq 'testtest'
+    obj = User.new({ name: 'name' }.to_json)
+    obj.name = 'ruby'
+    expect(obj.name).to eq 'ruby'
   end
 
   it do
-    obj = RusonBaseTestSubClass2.new({ source_key_name: 'test' })
-    expect(obj.test_name).to eq 'test'
+    obj = Post.new(post_json)
+    expect(obj.picture.class).to eq Picture
+    expect(obj.picture.title).to eq 'Ruson Picture'
+
+    expect(obj.tags.first.class).to eq Tag
+    expect(obj.tags.size).to eq 2
+    expect(obj.tags[0].name).to eq 'Ruby'
+    expect(obj.tags[1].name).to eq 'Json'
   end
 
   it do
-    obj = RusonBaseTestSubClass2.new({ source_key_name: 'test' }.to_json)
-    expect(obj.test_name).to eq 'test'
-  end
-
-  it do
-    obj = RusonBaseTestSubClass3.new(text)
-    expect(obj.object.class).to eq RusonBaseTestSubClass
-    expect(obj.object.test_name).to eq 'object_name'
-
-    expect(obj.objects.first.class).to eq RusonBaseTestSubClass2
-    expect(obj.objects.size).to eq 3
-    expect(obj.objects[0].test_name).to eq '1'
-    expect(obj.objects[1].test_name).to eq '2'
-    expect(obj.objects[2].test_name).to eq '3'
-  end
-
-  it do
-    obj = RusonBaseTestSubClass4.new({ status: :draft })
+    obj = Post.new({ status: :draft })
     expect(obj.status).to eq :draft
   end
 
   it do
     expect do
-      RusonBaseTestSubClass4.new({ status: :undefined })
+      Post.new({ status: :undefined })
     end.to raise_error { ArgumentError }
   end
 
   it do
-    obj = RusonBaseTestSubClass4.new({ status: :draft })
+    obj = Post.new({ status: :draft })
     expect(obj.draft?).to be_truthy
     expect(obj.published?).to be_falsey
   end
 
   it do
-    obj = RusonBaseTestSubClass4.new({ status: :draft }.to_json)
+    obj = Post.new({ status: :draft }.to_json)
     expect(obj.status).to eq :draft
   end
 
   it do
     expect do
-      RusonBaseTestSubClass4.new({ status: :undefined }.to_json)
+      Post.new({ status: :undefined }.to_json)
     end.to raise_error { ArgumentError }
   end
 
   it do
-    obj = RusonBaseTestSubClass4.new({ status: :draft }.to_json)
+    obj = Post.new({ status: :draft }.to_json)
     expect(obj.draft?).to be_truthy
     expect(obj.published?).to be_falsey
   end

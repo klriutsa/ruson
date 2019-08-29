@@ -1,0 +1,26 @@
+{
+  "id": 1,
+  "title": "Ruson",
+  "user": {
+    "id": 1,
+    "name": "klriutsa",
+    "url": "https://github.com/klriutsa/ruson"
+  },
+  "content": "Json ORM for Ruby Object",
+  "picture": {
+    "id": 1,
+    "title": "Ruson Picture",
+    "url": "https://picsum.photos/200"
+  },
+  "tags": [
+    {
+      "id": 1,
+      "name": "Ruby"
+    },
+    {
+      "id": 2,
+      "name": "Json"
+    }
+  ],
+  "status": "published"
+}
