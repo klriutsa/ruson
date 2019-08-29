@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe Ruson::Base do
+RSpec.describe Ruson::Nilable do
   class Item < Ruson::Base
     field :id, nilable: true
     field :name, nilable: false

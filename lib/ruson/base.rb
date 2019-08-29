@@ -9,6 +9,7 @@ require 'ruson/class/float'
 require 'ruson/converter'
 require 'ruson/json'
 require 'ruson/value'
+require 'ruson/nilable'
 
 require 'ruson/error'
 
@@ -55,6 +56,7 @@ module Ruson
     include Ruson::Converter
     include Ruson::Json
     include Ruson::Value
+    include Ruson::Nilable
 
     def initialize(json, root_key: nil)
       params = get_hash_from_json(json)
@@ -75,7 +77,10 @@ module Ruson
 
     def init_attributes(accessors, params)
       accessors.each do |key, options|
-        val = get_val(params, options[:name] || key, options)
+        key_name = options[:name] || key
+
+        check_nilable(params, key_name, options)
+        val = get_val(params, key_name, options)
         set_attribute(key, val)
       end
     end
