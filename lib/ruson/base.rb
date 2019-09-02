@@ -78,9 +78,10 @@ module Ruson
     def init_attributes(accessors, params)
       accessors.each do |key, options|
         key_name = options[:name] || key
+        value = params[key_name]
 
-        check_nilable(params, key_name, options)
-        val = get_val(params, key_name, options)
+        check_nilable(value, options)
+        val = get_val(value, options)
         set_attribute(key, val)
       end
     end

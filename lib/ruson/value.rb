@@ -1,12 +1,12 @@
 module Ruson
   module Value
-    def get_val(params, key_name, options)
+    def get_val(value, options)
       if !options[:class].nil?
-        class_param(params[key_name], options[:class])
+        class_param(value, options[:class])
       elsif !options[:each_class].nil?
-        each_class_param(params[key_name], options[:each_class])
+        each_class_param(value, options[:each_class])
       else
-        params[key_name]
+        value
       end
     end
 
