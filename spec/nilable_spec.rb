@@ -2,8 +2,8 @@ require 'spec_helper'
 
 RSpec.describe Ruson::Nilable do
   class Item < Ruson::Base
-    field :id, nilable: true
-    field :name, nilable: false
+    field :id, nilable: false
+    field :name, nilable: true
     field :description
   end
 

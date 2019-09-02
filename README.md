@@ -65,6 +65,26 @@ post = Post.new(json)
 post.url #=> 'http://sample.com'
 ```
 
+### nilable
+
+post.json
+```json
+{
+  "title": "Ruson",
+  "post_url": "http://sample.com"
+}
+```
+
+```ruby
+class Post < Ruson::Base
+  field :title, nilable: false
+  field :url, name: 'post_url'
+end
+
+json = File.read('post.json')
+post = Post.new(json) #=> Ruson::NotNilException
+```
+
 ### nested class
 
 #### class
