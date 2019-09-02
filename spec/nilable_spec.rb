@@ -11,11 +11,29 @@ RSpec.describe Ruson::Nilable do
     expect {
       Item.new({ id: 2 })
     }.not_to raise_error(Ruson::NotNilException)
+    expect {
+      Item.new({ id: 2, name: 'name' })
+    }.not_to raise_error(Ruson::NotNilException)
+    expect {
+      Item.new({ id: 2, name: 'name', description: 'description' })
+    }.not_to raise_error(Ruson::NotNilException)
+    expect {
+      Item.new('{"id":2,"name":"name","description":"description"}')
+    }.not_to raise_error(Ruson::NotNilException)
   end
 
   it 'is raised NotNilException' do
     expect {
+      Item.new({})
+    }.to raise_error(Ruson::NotNilException)
+    expect {
       Item.new({ name: 'name' })
+    }.to raise_error(Ruson::NotNilException)
+    expect {
+      Item.new({ name: 'name', description: 'description' })
+    }.to raise_error(Ruson::NotNilException)
+    expect {
+      Item.new('{"name":"name","description":"description"}')
     }.to raise_error(Ruson::NotNilException)
   end
 end
