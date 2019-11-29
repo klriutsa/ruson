@@ -10,16 +10,16 @@ RSpec.describe Ruson::Nilable do
   it 'is not raised NotNilException' do
     expect {
       Item.new({ id: 2 })
-    }.not_to raise_error(Ruson::NotNilException)
+    }.not_to raise_error
     expect {
       Item.new({ id: 2, name: 'name' })
-    }.not_to raise_error(Ruson::NotNilException)
+    }.not_to raise_error
     expect {
       Item.new({ id: 2, name: 'name', description: 'description' })
-    }.not_to raise_error(Ruson::NotNilException)
+    }.not_to raise_error
     expect {
       Item.new('{"id":2,"name":"name","description":"description"}')
-    }.not_to raise_error(Ruson::NotNilException)
+    }.not_to raise_error
   end
 
   it 'is raised NotNilException' do
