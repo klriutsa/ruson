@@ -11,6 +11,7 @@ require 'ruson/converter'
 require 'ruson/json'
 require 'ruson/nilable'
 require 'ruson/persistence'
+require 'ruson/querying'
 require 'ruson/value'
 
 require 'ruson/error'
@@ -61,6 +62,7 @@ module Ruson
     include Ruson::Json
     include Ruson::Nilable
     include Ruson::Persistence
+    include Ruson::Querying
     include Ruson::Value
 
     def initialize(json, root_key: nil)
