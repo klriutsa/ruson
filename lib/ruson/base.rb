@@ -3,8 +3,9 @@ require 'active_support'
 require 'active_support/core_ext'
 
 require 'ruson/class/boolean'
-require 'ruson/class/integer'
 require 'ruson/class/float'
+require 'ruson/class/integer'
+require 'ruson/class/time'
 
 require 'ruson/converter'
 require 'ruson/json'
@@ -68,7 +69,17 @@ module Ruson
     end
 
     def to_hash
-      convert_to_hash(self.class.accessors)
+      res = convert_to_hash(self.class.accessors)
+
+      res.inject({}) do |result, attributes|
+        key, value = attributes
+        if self.class.accessors[key].key?(:name)
+          result[self.class.accessors[key][:name].to_s] = value
+        else
+          result[key] = value
+        end
+        result
+      end
     end
 
     def to_json
@@ -79,8 +90,7 @@ module Ruson
 
     def init_attributes(accessors, params)
       accessors.each do |key, options|
-        key_name = options[:name] || key
-        value = params[key_name]
+        value = params[options[:name]] || params[key]
 
         check_nilable(value, options)
         val = get_val(value, options)
