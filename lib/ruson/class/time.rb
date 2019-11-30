@@ -1,5 +1,12 @@
 class Time
   def self.new(value)
-    Time.at(value).to_datetime
+    case value
+    when Integer, Float
+      Time.at(value).to_time
+    when String
+      Time.parse(value).to_time
+    else
+      value
+    end
   end
 end
