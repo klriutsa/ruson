@@ -145,25 +145,21 @@ RSpec.describe 'Persistence' do
       end
 
       context 'using the update method' do
-        subject do
-          user = User.new(name: 'zedtux')
-          user.save
-          user
-        end
+        subject { Vehicle.create(name: 'Jean Bart') }
 
         it 'should update all the given attributes' do
-          expect(
-            subject.update(url: 'https://github.com/klriutsa/ruson')
-          ).to be_truthy
+          now = Time.now
+          expect(subject.update(expiredAt: now, price: 12)).to be_truthy
 
           saved_data = File.read(
-            File.join(Ruson.output_folder, 'Users', "#{subject.id}.json")
+            File.join(Ruson.output_folder, 'Vehicles', "#{subject.id}.json")
           )
           expect(saved_data).to eq(
-            User.new(
+            Vehicle.new(
               id: 1,
-              name: 'zedtux',
-              url: 'https://github.com/klriutsa/ruson'
+              name: 'Jean Bart',
+              price: 12,
+              expired_at: now
             ).to_json
           )
         end

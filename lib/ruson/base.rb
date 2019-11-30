@@ -50,6 +50,8 @@ module Ruson
       end
 
       def add_accessor(name, options = {})
+        options[:name] = options[:name].try(:to_sym) if options[:name]
+
         @accessors ||= {}
         @accessors.merge!({ name.to_sym => options })
       end
@@ -73,7 +75,7 @@ module Ruson
 
       res.inject({}) do |result, attributes|
         key, value = attributes
-        if self.class.accessors[key].key?(:name)
+        if self.class.accessors[key] && self.class.accessors[key].key?(:name)
           result[self.class.accessors[key][:name].to_s] = value
         else
           result[key] = value
@@ -89,13 +91,7 @@ module Ruson
     private
 
     def init_attributes(accessors, params)
-      accessors.each do |key, options|
-        value = params[options[:name]] || params[key]
-
-        check_nilable(value, options)
-        val = get_val(value, options)
-        set_attribute(key, val)
-      end
+      update_attributes(accessors, params)
 
       self.class.attr_accessor(:id)
       set_attribute(:id, params[:id]) if params[:id]
@@ -103,6 +99,16 @@ module Ruson
 
     def set_attribute(attr_name, val)
       self.send("#{attr_name}=".to_sym, val)
+    end
+
+    def update_attributes(accessors, params)
+      accessors.each do |key, options|
+        value = params[options[:name]] || params[key]
+
+        check_nilable(value, options)
+        val = get_val(value, options)
+        set_attribute(key, val)
+      end
     end
   end
 end

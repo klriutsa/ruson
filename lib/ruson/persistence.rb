@@ -72,7 +72,16 @@ module Ruson
     end
 
     def update(attributes)
-      attributes.each { |key, value| send("#{key}=", value) }
+      attributes.symbolize_keys!
+
+      # Takes only accessor for attributes to be updated, avoiding to nullify
+      # the other attributes.
+      filtered_accessors = self.class.accessors.select do |key, accessor_attrs|
+        attributes.key?(key) || attributes.key?(accessor_attrs[:name])
+      end
+
+      update_attributes(filtered_accessors, attributes)
+
       save
     end
   end
