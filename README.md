@@ -20,6 +20,8 @@ Or install it yourself as:
 
 ## Usage
 
+### Basic
+
 post.json
 ```json
 {
@@ -42,7 +44,7 @@ post.title #=> 'Ruson'
 post.content #=> 'Welcome!'
 ```
 
-### name
+#### name
 
 post.json
 ```json
@@ -65,7 +67,7 @@ post = Post.new(json)
 post.url #=> 'http://sample.com'
 ```
 
-### nilable
+#### nilable
 
 post.json
 ```json
@@ -85,9 +87,9 @@ json = File.read('post.json')
 post = Post.new(json) #=> Ruson::NotNilException
 ```
 
-### nested class
+#### nested class
 
-#### class
+##### class
 
 post.json
 ```json
@@ -119,7 +121,7 @@ post = Post.new(json)
 post.picture.url #=> 'http://sample.com/picture.png'
 ```
 
-##### Primary classes
+###### Primary classes
 
 * Boolean
 * Integer
@@ -151,7 +153,7 @@ post.view #=> 1234
 post.rate #=> 3.8
 ```
 
-#### each class
+##### each class
 
 post.json
 ```json
@@ -185,7 +187,7 @@ post = Post.new(json)
 post.tags.first.name #=> 'Ruby'
 ```
 
-### enum
+#### enum
 
 article.json
 ```json
@@ -213,7 +215,7 @@ article.status = 'undefined'
   #=> undefined is not a valid status (ArgumentError)
 ```
 
-### to_json
+#### to_json
 
 ```ruby
 class Post < Ruson::Base
@@ -228,7 +230,7 @@ post.url = 'https://example.com/examples'
 post.to_json #=> "{\"title\":\"Ruson\",\"url\":\"https://example.com/examples\"}"
 ```
 
-### to_hash
+#### to_hash
 
 ```ruby
 class Post < Ruson::Base
@@ -243,7 +245,7 @@ post.url = 'https://example.com/examples'
 post.to_hash #=> {title: "Ruson", url: "https://example.com/examples" }
 ```
 
-### API json parser
+#### API json parser
 
 ```ruby
 class Article < Ruson::Base
@@ -261,11 +263,110 @@ article = Article.new(response.body)
 article.title
 ```
 
+### Persistence
+
+Persistence will save the models as JSON file, with the model ID as filename, and model class name as parent folder so that a `User` model with ID `1` will be saved as `Users/1.json`.
+
+You *must* define the `output_folder` before to be able to call `save` or `destroy`.
+
+```ruby
+Ruson.output_folder = './db/'
+```
+
+#### Creating new record
+
+```ruby
+class User < Ruson::Base
+  field :first_name
+  field :last_name
+  field :email
+  field :title
+end
+
+# Using new + save
+guillaume = User.new(first_name: 'Guillaume', last_name: 'Briat', email: 'guillaume@kaamelott.fr')
+guillaume.save # Creates the ./db/Users/1.json file
+
+# Or using the create method
+guillaume = User.create(first_name: 'Guillaume', last_name: 'Briat', email: 'guillaume@kaamelott.fr')
+
+puts File.read('./db/Users/1.json')
+{"first_name":"Guillaume","last_name":"Briat","email":"guillaume@kaamelott.fr"}
+=> nil
+```
+
+#### Updating a record
+
+```ruby
+# Assigning a value + save
+guillaume.title = 'Burgundians King'
+guillaume.save # Updates the ./db/Users/1.json file
+
+# Or using the update method
+guillaume.update(title: 'Burgundians King')
+
+puts File.read('./db/Users/1.json')
+{"first_name":"Guillaume","last_name":"Briat","email":"guillaume@kaamelott.fr","title":"Burgundians King"}
+=> nil
+```
+
+#### Destroying a record
+
+```ruby
+guillaume.destroy # Deletes the ./db/Users/1.json file
+
+puts File.read('./db/Users/1.json')
+Traceback (most recent call last):
+       16: from /usr/local/bundle/gems/bundler-2.0.2/exe/bundle:30:in `block in <top (required)>'
+       ...
+        2: from (irb):26
+        1: from (irb):26:in `read'
+Errno::ENOENT (No such file or directory @ rb_sysopen - ./db/Users/1.json)
+```
+
 ## Development
+
+### Without Docker
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 
 To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+
+### With Docker
+
+```
+$ docker build -t `whoami`/ruson .
+```
+
+In order to see the available Rake tasks:
+
+```
+$ docker --rm `whoami`/ruson
+rake build            # Build ruson-1.2.0.gem into the pkg directory
+rake clean            # Remove any temporary products
+rake clobber          # Remove any generated files
+rake install          # Build and install ruson-1.2.0.gem into system gems
+rake install:local    # Build and install ruson-1.2.0.gem into system gems without network access
+rake release[remote]  # Create tag v1.2.0 and build and push ruson-1.2.0.gem to rubygems.org
+rake spec             # Run RSpec code examples
+```
+_`--rm` means delete the container after the command ended._
+
+In order to execute the tests:
+
+```
+$ docker run --rm -it --volume "$PWD":/gem/ `whoami`/ruson rake spec
+```
+_`--volume` is used to sync the files from your current folder into the container so that if you change a file, the modification is available in the container._
+
+In the case you'd like to access the IRB console:
+
+```
+$ docker run --rm -it --volume "$PWD":/gem/ `whoami`/ruson irb
+irb(main):001:0> require 'ruson'
+=> true
+irb(main):002:0>
+```
 
 ## Contributing
 

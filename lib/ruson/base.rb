@@ -9,8 +9,9 @@ require 'ruson/class/time'
 
 require 'ruson/converter'
 require 'ruson/json'
-require 'ruson/value'
 require 'ruson/nilable'
+require 'ruson/persistence'
+require 'ruson/value'
 
 require 'ruson/error'
 
@@ -49,6 +50,8 @@ module Ruson
       end
 
       def add_accessor(name, options = {})
+        options[:name] = options[:name].try(:to_sym) if options[:name]
+
         @accessors ||= {}
         @accessors.merge!({ name.to_sym => options })
       end
@@ -56,8 +59,9 @@ module Ruson
 
     include Ruson::Converter
     include Ruson::Json
-    include Ruson::Value
     include Ruson::Nilable
+    include Ruson::Persistence
+    include Ruson::Value
 
     def initialize(json, root_key: nil)
       params = get_hash_from_json(json)
@@ -71,7 +75,7 @@ module Ruson
 
       res.inject({}) do |result, attributes|
         key, value = attributes
-        if self.class.accessors[key].key?(:name)
+        if self.class.accessors[key] && self.class.accessors[key].key?(:name)
           result[self.class.accessors[key][:name].to_s] = value
         else
           result[key] = value
@@ -87,6 +91,17 @@ module Ruson
     private
 
     def init_attributes(accessors, params)
+      update_attributes(accessors, params)
+
+      self.class.attr_accessor(:id)
+      set_attribute(:id, params[:id]) if params[:id]
+    end
+
+    def set_attribute(attr_name, val)
+      self.send("#{attr_name}=".to_sym, val)
+    end
+
+    def update_attributes(accessors, params)
       accessors.each do |key, options|
         value = params[options[:name]] || params[key]
 
@@ -94,10 +109,6 @@ module Ruson
         val = get_val(value, options)
         set_attribute(key, val)
       end
-    end
-
-    def set_attribute(attr_name, val)
-      self.send("#{attr_name}=".to_sym, val)
     end
   end
 end
