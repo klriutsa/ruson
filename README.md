@@ -324,6 +324,22 @@ Traceback (most recent call last):
 Errno::ENOENT (No such file or directory @ rb_sysopen - ./db/Users/1.json)
 ```
 
+### Querying
+
+Ruson allows you to query for existing records.
+
+You *must* define the `output_folder` before to query records.
+
+```ruby
+Ruson.output_folder = './db/'
+```
+
+#### Find a record by ID
+
+```ruby
+user = User.find(1) # Searches for a ./db/Users/1.json file
+```
+
 ## Development
 
 ### Without Docker

@@ -1,7 +1,7 @@
 module Ruson
   module Converter
     def convert_to_hash(accessors)
-      accessors.keys.inject({}) do |result, key|
+      accessors.keys.inject({ id: id }) do |result, key|
         value = send(key)
         result[key.to_sym] = convert_array_to_hash_value(value)
         result

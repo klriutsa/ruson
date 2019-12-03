@@ -1,4 +1,5 @@
 require 'bundler/setup'
+require 'ffaker'
 require 'ruson'
 require 'support/objects'
 require 'timecop'

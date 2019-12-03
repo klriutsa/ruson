@@ -24,6 +24,7 @@ RSpec.describe 'field name attribute' do
       )
 
       expect(vehicle.to_hash).to eq(
+        id: nil,
         name: 'Black Sims',
         price: 17.43,
         'expiredAt' => Time.at(1575608400.0).to_datetime
