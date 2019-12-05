@@ -25,13 +25,6 @@ module Ruson
       true
     end
 
-    def ensure_output_folder_is_defined
-      return if Ruson.output_folder
-
-      raise ArgumentError, 'No output folder defined. You can define it ' \
-                           'using Ruson.output_folder = "/path/to/db/folder"'
-    end
-
     def ensure_model_folder_exists
       return if File.exist?(self.class.model_base_path)
 
@@ -65,7 +58,7 @@ module Ruson
     end
 
     def save
-      ensure_output_folder_is_defined
+      self.class.ensure_output_folder_is_defined
       generate_uniq_id
       write_file_to_disk
       true

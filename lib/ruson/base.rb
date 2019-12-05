@@ -58,6 +58,7 @@ module Ruson
       end
     end
 
+    # ~~~~ Mixins ~~~~
     include Ruson::Converter
     include Ruson::Json
     include Ruson::Nilable
@@ -65,6 +66,15 @@ module Ruson
     include Ruson::Querying
     include Ruson::Value
 
+    # ~~~~ Class Methods ~~~~
+    def self.ensure_output_folder_is_defined
+      return if Ruson.output_folder
+
+      raise ArgumentError, 'No output folder defined. You can define it ' \
+                           'using Ruson.output_folder = "/path/to/db/folder"'
+    end
+
+    # ~~~~ Instance Methods ~~~~
     def initialize(json, root_key: nil)
       params = get_hash_from_json(json)
       params = params[root_key.to_s] unless root_key.nil?

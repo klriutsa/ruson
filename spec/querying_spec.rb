@@ -12,63 +12,81 @@ RSpec.describe 'Querying' do
   after(:all) { FileUtils.rm_rf('./db/') }
 
   describe 'search by ID' do
-    describe 'using find' do
-      context "searching a record which doesn't exist" do
-        it 'should raise a Ruson::RecordNotFound error' do
-          expect {
-            user = Vehicle.find(999)
-            expect(user).to be_nil
-          }.to_not raise_error
-        end
-      end
+    context 'without an output folder' do
+      before { Ruson.output_folder = nil }
 
-      context 'searching existing records' do
-        it 'should not raise error' do
-          expect {
-            Vehicle.find(1)
-          }.to_not raise_error
-        end
-
-        it 'should return the Vehicle instance for the given ID' do
-          vehicle = Vehicle.find(1)
-
-          expected_vehicle = Vehicle.new(name: @user1_name).to_hash
-          expected_vehicle[:id] = 1 # Forces the ID
-
-          expect(vehicle.to_hash).to eq(expected_vehicle)
-
-          vehicle = Vehicle.find(2)
-
-          expected_vehicle = Vehicle.new(name: @user2_name).to_hash
-          expected_vehicle[:id] = 2 # Forces the ID
-
-          expect(vehicle.to_hash).to eq(expected_vehicle)
-        end
+      it 'should raise an ArgumentError' do
+        expect {
+          Vehicle.find(999)
+        }.to raise_error(
+          ArgumentError,
+          'No output folder defined. You can define it using ' \
+          'Ruson.output_folder = "/path/to/db/folder"'
+        )
       end
     end
 
-    describe 'using find!' do
-      context "searching a record which doesn't exist" do
-        it 'should raise a Ruson::RecordNotFound error' do
-          expect {
-            Vehicle.find!(999)
-          }.to raise_error(Ruson::RecordNotFound)
+    context 'with an output folder' do
+      before { Ruson.output_folder = './db/' }
+
+      describe 'using find' do
+        context "searching a record which doesn't exist" do
+          it 'should raise a Ruson::RecordNotFound error' do
+            expect {
+              user = Vehicle.find(999)
+              expect(user).to be_nil
+            }.to_not raise_error
+          end
+        end
+
+        context 'searching existing records' do
+          it 'should not raise error' do
+            expect {
+              Vehicle.find(1)
+            }.to_not raise_error
+          end
+
+          it 'should return the Vehicle instance for the given ID' do
+            vehicle = Vehicle.find(1)
+
+            expected_vehicle = Vehicle.new(name: @user1_name).to_hash
+            expected_vehicle[:id] = 1 # Forces the ID
+
+            expect(vehicle.to_hash).to eq(expected_vehicle)
+
+            vehicle = Vehicle.find(2)
+
+            expected_vehicle = Vehicle.new(name: @user2_name).to_hash
+            expected_vehicle[:id] = 2 # Forces the ID
+
+            expect(vehicle.to_hash).to eq(expected_vehicle)
+          end
         end
       end
 
-      context 'searching existing records' do
-        it 'should not raise error' do
-          expect {
-            Vehicle.find!(1)
-          }.to_not raise_error
+      describe 'using find!' do
+        context "searching a record which doesn't exist" do
+          it 'should raise a Ruson::RecordNotFound error' do
+            expect {
+              Vehicle.find!(999)
+            }.to raise_error(Ruson::RecordNotFound)
+          end
         end
 
-        it 'should return the Vehicle instance for the given ID' do
-          user = Vehicle.find!(1)
-          expect(user.to_hash).to eq(@user1.to_hash)
+        context 'searching existing records' do
+          it 'should not raise error' do
+            expect {
+              Vehicle.find!(1)
+            }.to_not raise_error
+          end
 
-          user = Vehicle.find!(2)
-          expect(user.to_hash).to eq(@user2.to_hash)
+          it 'should return the Vehicle instance for the given ID' do
+            user = Vehicle.find!(1)
+            expect(user.to_hash).to eq(@user1.to_hash)
+
+            user = Vehicle.find!(2)
+            expect(user.to_hash).to eq(@user2.to_hash)
+          end
         end
       end
     end

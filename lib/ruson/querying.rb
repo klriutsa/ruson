@@ -6,6 +6,8 @@ module Ruson
 
     module ClassMethods
       def find(id)
+        ensure_output_folder_is_defined
+
         file_path = File.join(model_base_path, "#{id}.json")
 
         return unless File.exist?(file_path)
