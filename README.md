@@ -338,6 +338,10 @@ Ruson.output_folder = './db/'
 
 ```ruby
 user = User.find(1) # Searches for a ./db/Users/1.json file
+
+# Searching an idea which doesn't exist
+User.find(1234) #=> nil
+User.find!(1234) #=> raises Ruson::RecordNotFound
 ```
 
 ## Development
