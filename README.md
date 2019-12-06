@@ -337,11 +337,21 @@ Ruson.output_folder = './db/'
 #### Find a record by ID
 
 ```ruby
-user = User.find(1) # Searches for a ./db/Users/1.json file
+User.find(1) # Searches for a ./db/Users/1.json file
 
-# Searching an idea which doesn't exist
+# Searching a user which doesn't exist
 User.find(1234) #=> nil
 User.find!(1234) #=> raises Ruson::RecordNotFound
+```
+
+#### Find first record
+
+```ruby
+User.first # Loads the first ./db/Users/*.json file.
+
+# Without existing User records
+User.first #=> nil
+User.first! #=> raises Ruson::RecordNotFound
 ```
 
 ## Development
