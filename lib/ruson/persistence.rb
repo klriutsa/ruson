@@ -53,7 +53,7 @@ module Ruson
 
     def write_file_to_disk
       File.open(model_path, 'w') do |file|
-        file.write(to_json)
+        file.write(to_json(exclude: %i[id]))
       end
     end
 

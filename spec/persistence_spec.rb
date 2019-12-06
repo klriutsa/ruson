@@ -99,7 +99,9 @@ RSpec.describe 'Persistence' do
           user = User.new({})
           user.save
 
-          expect(File.read(model_path(user.id))).to eq(user.to_json)
+          expect(
+            File.read(model_path(user.id))
+          ).to eq(user.to_json(exclude: %i[id]))
         end
       end
 
@@ -113,7 +115,9 @@ RSpec.describe 'Persistence' do
         it 'should have save all the attributes to the file' do
           user = User.create({})
 
-          expect(File.read(model_path(user.id))).to eq(user.to_json)
+          expect(
+            File.read(model_path(user.id))
+          ).to eq(user.to_json(exclude: %i[id]))
         end
       end
     end
@@ -136,10 +140,9 @@ RSpec.describe 'Persistence' do
           )
           expect(saved_data).to eq(
             User.new(
-              id: 1,
               name: 'zedtux',
               url: 'https://github.com/klriutsa/ruson'
-            ).to_json
+            ).to_json(exclude: %i[id])
           )
         end
       end
@@ -156,11 +159,10 @@ RSpec.describe 'Persistence' do
           )
           expect(saved_data).to eq(
             Vehicle.new(
-              id: 1,
               name: 'Jean Bart',
               price: 12,
               expired_at: now
-            ).to_json
+            ).to_json(exclude: %i[id])
           )
         end
       end
