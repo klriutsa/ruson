@@ -13,7 +13,6 @@ module Ruson
     private
 
     def class_param(param, klass)
-      return nil if param.nil?
       klass.new(param)
     end
 

@@ -2,6 +2,7 @@ require 'json'
 require 'active_support'
 require 'active_support/core_ext'
 
+require 'ruson/class/array'
 require 'ruson/class/boolean'
 require 'ruson/class/float'
 require 'ruson/class/integer'
@@ -110,7 +111,7 @@ module Ruson
       update_attributes(accessors, params)
 
       self.class.attr_accessor(:id)
-      set_attribute(:id, params[:id]) if params[:id]
+      set_attribute(:id, params[:id]) if params && params[:id]
     end
 
     def set_attribute(attr_name, val)
@@ -119,7 +120,7 @@ module Ruson
 
     def update_attributes(accessors, params)
       accessors.each do |key, options|
-        value = params[options[:name]] || params[key]
+        value = params[options[:name]] || params[key] if params
 
         check_nilable(value, options)
         val = get_val(value, options)
