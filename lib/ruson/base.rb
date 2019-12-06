@@ -96,8 +96,12 @@ module Ruson
       end
     end
 
-    def to_json
-      to_hash.to_json
+    def to_json(options = {})
+      hash = to_hash
+
+      options[:exclude]&.each { |key| hash.delete(key) }
+
+      hash.to_json
     end
 
     private
