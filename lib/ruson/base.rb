@@ -100,7 +100,7 @@ module Ruson
     def to_json(options = {})
       hash = to_hash
 
-      options[:exclude]&.each { |key| hash.delete(key) }
+      options[:exclude].each { |key| hash.delete(key) } if options[:exclude]
 
       hash.to_json
     end
