@@ -8,7 +8,7 @@ RSpec.describe 'field name attribute' do
       vehicle = Vehicle.new(
         name: 'Black Sims',
         price: 17.43,
-        'expiredAt' => 1575608400.0
+        expiredAt: 1575608400.0
       )
 
       expect(vehicle.expired_at).to eq(Time.at(1575608400.0).to_datetime)
@@ -27,7 +27,7 @@ RSpec.describe 'field name attribute' do
         id: nil,
         name: 'Black Sims',
         price: 17.43,
-        'expiredAt' => Time.at(1575608400.0).to_datetime
+        expiredAt: Time.at(1575608400.0).to_datetime
       )
     end
   end
