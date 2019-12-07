@@ -27,6 +27,6 @@ end
 
 class Vehicle < Ruson::Base
   field :name
-  field :price
+  field :price, class: Float
   field :expired_at, name: 'expiredAt', class: Time
 end
