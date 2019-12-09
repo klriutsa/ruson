@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
   spec.name    = 'ruson'
   spec.version = Ruson::VERSION
   spec.authors = ['klriutsa']
-  spec.email   = ['hiroya.kurushima@litalico.co.jp']
+  spec.email   = ['kurushima.hiroya@gmail.com']
 
   spec.summary     = %q{A Ruby serialization/deserialization library to convert Ruby Objects into JSON and back}
   spec.description = %q{A Ruby serialization/deserialization library to convert Ruby Objects into JSON and back}
