@@ -88,8 +88,9 @@ module Ruson
 
       res.inject({}) do |result, attributes|
         key, value = attributes
-        if self.class.accessors[key] && self.class.accessors[key].key?(:name)
-          result[self.class.accessors[key][:name].to_s] = value
+        accessor = self.class.accessors[key]
+        if accessor && accessor&.key?(:name)
+          result[accessor[:name]] = value
         else
           result[key] = value
         end
@@ -107,6 +108,11 @@ module Ruson
 
     private
 
+    def cast_value(value, accessor_options, options = {})
+      check_nilable(value, accessor_options)
+      get_val(value, accessor_options)
+    end
+
     def init_attributes(accessors, params)
       update_attributes(accessors, params)
 
@@ -114,17 +120,16 @@ module Ruson
       set_attribute(:id, params[:id]) if params && params[:id]
     end
 
-    def set_attribute(attr_name, val)
-      self.send("#{attr_name}=".to_sym, val)
+    def set_attribute(attr_name, value)
+      send("#{attr_name}=".to_sym, value)
     end
 
     def update_attributes(accessors, params)
       accessors.each do |key, options|
         value = params[options[:name]] || params[key] if params
 
-        check_nilable(value, options)
-        val = get_val(value, options)
-        set_attribute(key, val)
+        casted_value = cast_value(value, options)
+        set_attribute(key, casted_value)
       end
     end
   end
