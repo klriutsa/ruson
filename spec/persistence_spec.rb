@@ -147,6 +147,10 @@ RSpec.describe 'Persistence' do
       context 'using the update method' do
         subject { Vehicle.create(name: 'Jean Bart') }
 
+        before do
+          ENV['TZ'] = 'UTC'
+        end
+
         it 'should update all the given attributes' do
           Timecop.freeze(Time.local(2019, 12, 7, 5, 6, 57)) do
             expect(subject.update(expiredAt: Time.now, price: 12)).to be_truthy
