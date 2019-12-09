@@ -1,6 +1,6 @@
 # Ruson
 
-Json ORM for Ruby Object
+A Ruby serialization/deserialization library to convert Ruby Objects into JSON and back
 
 ## Installation
 
