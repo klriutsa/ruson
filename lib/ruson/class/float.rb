@@ -1,5 +1,7 @@
-class Float
-  def self.new(value)
-    value.to_f
+module Ruson
+  class Float
+    def self.new(value)
+      value.to_f
+    end
   end
 end

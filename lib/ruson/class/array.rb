@@ -1,5 +1,7 @@
-class Array
-  def self.new(value)
-    Array(value)
+module Ruson
+  class Array
+    def self.new(value)
+      Array(value)
+    end
   end
 end

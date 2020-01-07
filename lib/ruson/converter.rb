@@ -11,7 +11,7 @@ module Ruson
     private
 
     def convert_array_to_hash_value(value)
-      if value.instance_of?(Array)
+      if value.instance_of?(::Array)
         value.inject([]) { |result, v| result << convert_ruson_to_hash_value(v) }
       else
         convert_ruson_to_hash_value(value)

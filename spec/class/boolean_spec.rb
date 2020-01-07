@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-RSpec.describe Boolean do
+RSpec.describe Ruson::Boolean do
   class BooleanObject < Ruson::Base
-    field :enabled, class: Boolean
+    field :enabled, class: Ruson::Boolean
   end
 
   it 'cast to boolean' do

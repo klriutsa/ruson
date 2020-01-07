@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-RSpec.describe Integer do
+RSpec.describe Ruson::Integer do
   class IntegerObject < Ruson::Base
-    field :count, class: Integer
+    field :count, class: Ruson::Integer
   end
 
   it 'cast to integer' do

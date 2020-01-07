@@ -89,7 +89,7 @@ module Ruson
       res.inject({}) do |result, attributes|
         key, value = attributes
         accessor = self.class.accessors[key]
-        if accessor && accessor&.key?(:name)
+        if accessor && accessor.key?(:name)
           result[accessor[:name]] = value
         else
           result[key] = value
