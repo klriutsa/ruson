@@ -13,6 +13,7 @@ Gem::Specification.new do |spec|
   spec.description = %q{A Ruby serialization/deserialization library to convert Ruby Objects into JSON and back}
   spec.homepage    = 'https://github.com/klriutsa/ruson'
   spec.license     = 'MIT'
+  spec.required_ruby_version = '>= 2.5'
 
   spec.files         = `git ls-files -z`.split("\x0").reject do |f|
     f.match(%r{^(test|spec|features)/})
