@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-RSpec.describe Time do
+RSpec.describe Ruson::Time do
   class TimeObject < Ruson::Base
-    field :created_at, class: Time
+    field :created_at, class: Ruson::Time
   end
 
   before do

@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-RSpec.describe Float do
+RSpec.describe Ruson::Float do
   class FloatObject < Ruson::Base
-    field :rate, class: Float
+    field :rate, class: Ruson::Float
   end
 
   it 'cast to float' do

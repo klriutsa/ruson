@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-RSpec.describe Array do
+RSpec.describe Ruson::Array do
   class ArrayObject < Ruson::Base
-    field :items, class: Array
+    field :items, class: Ruson::Array
   end
 
   it 'casts nil to an empty array' do
