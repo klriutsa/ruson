@@ -12,7 +12,7 @@ RSpec.describe 'Querying' do
 
   after(:all) { FileUtils.rm_rf('./db/') }
 
-  describe 'search by ID' do
+  describe 'find' do
     context 'without an output folder' do
       before { Ruson.output_folder = nil }
 
@@ -93,7 +93,7 @@ RSpec.describe 'Querying' do
     end
   end
 
-  describe 'search first record' do
+  describe 'first' do
     context 'without an output folder' do
       before { Ruson.output_folder = nil }
 
@@ -145,6 +145,87 @@ RSpec.describe 'Querying' do
 
           it 'should return the first record' do
             expect(Vehicle.first!.to_hash).to eq(Vehicle.find(1).to_hash)
+          end
+        end
+      end
+    end
+  end
+
+  describe 'where' do
+    let(:post_json) { File.read('spec/support/post.json') }
+
+    context 'without an output folder' do
+      before { Ruson.output_folder = nil }
+
+      it 'should raise an ArgumentError' do
+        expect {
+          Post.where(title: 'Ruson').first
+        }.to raise_error(
+          ArgumentError,
+          'No output folder defined. You can define it using ' \
+          'Ruson.output_folder = "/path/to/db/folder"'
+        )
+      end
+    end
+
+    context 'with an output folder' do
+      before do
+        Ruson.output_folder = './db/'
+
+        @post = Post.create(post_json)
+      end
+
+      context 'querying a single attribute' do
+        context 'that no JSON file has' do
+          it 'should return an empty Array' do
+            expect(Post.where(this_key: 'do not exist')).to eq([])
+          end
+        end
+
+        context 'that JSON files have' do
+          context 'but with a value that no JSON files have' do
+            it 'should return an empty Array' do
+              expect(Post.where(title: 'this title do not exist')).to eq([])
+            end
+          end
+
+          context 'and with a value that JSON files have' do
+            it 'should return an Array with one Post instance' do
+              posts = Post.where(title: 'Ruson')
+
+              expect(posts).to be_present
+
+              expect(posts).to be_a(Array)
+
+              expect(posts.size).to eq(1)
+
+              expect(posts.first.class.name).to eq('Post')
+
+              expect(posts.first.to_hash).to eq(@post.to_hash)
+            end
+          end
+        end
+      end
+      context 'querying multiple attributes' do
+        context "with at least one attribute that doesn't matche" do
+          it 'should return an empty Array' do
+            expect(Post.where(title: 'Ruson', status: 'draft')).to eq([])
+          end
+        end
+
+        context 'with all attributes that matches' do
+          it 'should return an empty Array' do
+            posts = Post.where(title: 'Ruson', status: 'published')
+
+            expect(posts).to be_present
+
+            expect(posts).to be_a(Array)
+
+            expect(posts.size).to eq(1)
+
+            expect(posts.first.class.name).to eq('Post')
+
+            expect(posts.first.to_hash).to eq(@post.to_hash)
           end
         end
       end
