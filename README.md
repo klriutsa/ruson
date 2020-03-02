@@ -123,11 +123,11 @@ post.picture.url #=> 'http://sample.com/picture.png'
 
 ###### Primary classes
 
-* Array
-* Boolean
-* Float
-* Integer
-* Time
+* Ruson::Array
+* Ruson::Boolean
+* Ruson::Float
+* Ruson::Integer
+* Ruson::Time
 
 
 post.json
@@ -145,11 +145,11 @@ post.json
 ```ruby
 class Post < Ruson::Base
   field :title
-  field :items, class: Array
-  field :is_new, class: Boolean
-  field :rate, class: Float
-  field :view, class: Integer
-  field :expired_at, class: Time
+  field :items, class: Ruson::Array
+  field :is_new, class: Ruson::Boolean
+  field :rate, class: Ruson::Float
+  field :view, class: Ruson::Integer
+  field :expired_at, class: Ruson::Time
 end
 
 json = File.read('post.json')
