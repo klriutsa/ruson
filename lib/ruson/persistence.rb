@@ -2,6 +2,7 @@ module Ruson
   module Persistence
     def self.included(klass)
       klass.extend(ClassMethods)
+      klass.extend(Ruson::Json)
     end
 
     module ClassMethods
@@ -38,8 +39,8 @@ module Ruson
 
       id = 0
 
-      Dir.glob(File.join(self.class.model_base_path, '*.json')).each do |file|
-        file_id = File.basename(file, '.json').to_i
+      Dir.glob(File.join(self.class.model_base_path, '*.json')).each do |path|
+        file_id = id_from_file_path(path)
 
         id = file_id if file_id > id
       end

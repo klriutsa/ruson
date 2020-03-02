@@ -362,6 +362,35 @@ User.first #=> nil
 User.first! #=> raises Ruson::RecordNotFound
 ```
 
+#### Find a record by attributes
+
+post.json
+
+```json
+{
+  "title": "Ruson",
+  "content": "Welcome!"
+}
+```
+
+```ruby
+Post.create(File.read('post.json'))
+```
+
+```ruby
+Post.where(title: 'Ruson')
+#=> [#<Post:0x000055bb2e907b78 @title="Ruson", @content="Welcome!", @id=1>]
+
+Post.where(content: 'Wel')
+#=> []
+
+Post.where(content: 'Welcome!')
+#=> [#<Post:0x000055bb2e907b78 @title="Ruson", @content="Welcome!", @id=1>]
+
+Post.where(title: 'Ruson', content: 'Welcome!')
+#=> [#<Post:0x000055bb2e907b78 @title="Ruson", @content="Welcome!", @id=1>]
+```
+
 ## Development
 
 ### Without Docker
@@ -388,7 +417,7 @@ rake install:local    # Build and install ruson-1.2.0.gem into system gems witho
 rake release[remote]  # Create tag v1.2.0 and build and push ruson-1.2.0.gem to rubygems.org
 rake spec             # Run RSpec code examples
 ```
-_`--rm` means delete the container after the command ended._
+_`--rm` means delete the container after the command has ended._
 
 In order to execute the tests:
 
