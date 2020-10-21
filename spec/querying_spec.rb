@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe 'Querying' do
@@ -227,6 +229,40 @@ RSpec.describe 'Querying' do
 
             expect(posts.first.to_hash).to eq(@post.to_hash)
           end
+        end
+      end
+    end
+  end
+
+  describe 'all' do
+    let(:post_json) { File.read('spec/support/post.json') }
+
+    context 'without an output folder' do
+      before { Ruson.output_folder = nil }
+
+      it 'should raise an ArgumentError' do
+        expect { Vehicle.all }.to raise_error(
+          ArgumentError,
+          'No output folder defined. You can define it using ' \
+          'Ruson.output_folder = "/path/to/db/folder"'
+        )
+      end
+    end
+
+    context 'with an output folder' do
+      before { Ruson.output_folder = './db/' }
+
+      context 'querying all' do
+        it 'should return an Array of the same size as all the models' do
+          expect(Vehicle.all.size).to eql 2
+        end
+
+        it 'should return an Array of the requested model class' do
+          expect(Vehicle.all).to all(be_a(Vehicle))
+        end
+
+        it 'should return an Array of with all the records' do
+          expect(Vehicle.all.map(&:id)).to eql([@vehicle1.id, @vehicle2.id])
         end
       end
     end
