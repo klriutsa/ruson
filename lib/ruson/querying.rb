@@ -6,6 +6,16 @@ module Ruson
     end
 
     module ClassMethods
+      def all
+        ensure_output_folder_is_defined
+
+        model_files.collect do |path|
+          json = JSON.parse(File.read(path))
+
+          new(json.merge(id: id_from_file_path(path)))
+        end
+      end
+
       def find(id)
         ensure_output_folder_is_defined
 
